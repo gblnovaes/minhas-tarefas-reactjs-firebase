@@ -1,0 +1,42 @@
+.home-container {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.home-container span {
+    margin-bottom: 28px;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    max-width: 600px;
+}
+
+.form input {
+    margin-bottom: 12px;
+    height: 36px;
+    border: 0;
+    border-radius: 4px;
+    padding: 0 8px;
+}
+
+.form button {
+    height: 36px;
+    border: 0;
+    border-radius: 4px;
+    color: white;
+    background-color: #3366ff;
+}
+
+.button-link {
+    color: #b4b8bb;
+    text-decoration: none;
+    outline: none;
+    margin-top: 16px;
+    font-size: 14px;
+}
