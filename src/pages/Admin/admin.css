@@ -1,0 +1,53 @@
+.admin-container{
+    margin: 70px auto;
+    max-width:600px; 
+    width:100%;
+ }
+
+.admin-container .form {
+    padding: 10px 10px
+}
+
+.admin-container .form button{
+    margin: 10px 0px
+}
+
+.admin-container .form .list {
+    width:100%;
+    display:flex;
+    align-items: center;
+    flex-direction:row;
+    justify-content: space-between;
+    
+}
+.admin-container .form .btn-delete{
+    background-color: transparent;
+    color:#fcfca0;
+}
+
+.admin-container .form .btn-edit,.btn-delete{
+    margin-right: 5px;
+    padding: 10px;
+ }
+
+.admin-container .btn-logout{
+    background-color:#C9C9C9;
+    color:white;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 90px;
+    padding:20px;
+    outline:none;
+    border:none;
+    width:48px;
+    position:absolute;
+    bottom:25%;
+    height:48px;
+    transition:all 0.5s;
+}
+
+.admin-container .btn-logout:hover{
+    background-color:#ff0000;
+
+}
