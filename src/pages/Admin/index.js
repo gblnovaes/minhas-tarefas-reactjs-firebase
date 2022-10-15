@@ -3,19 +3,45 @@ import { useState,useEffect } from 'react'
 import { signOut } from 'firebase/auth'
 import './admin.css'
 import { auth,db } from '../../firebase.config'
-import {addDoc,collection} from 'firebase/firestore'
+import {addDoc,collection,onSnapshot,orderBy,where,query} from 'firebase/firestore'
 
 export default function Admin(){
     
     const [tarefaInput,setTarefaInput] = useState('')
     const [user, setUser] = useState({})
+    const [tarefa,setTarefa] = useState([])
     
     useEffect(() => {
         
         async function loadTarefa(){
             const userDetails = localStorage.getItem('@detailUser')
             setUser(JSON.parse(userDetails))
+            
+            if(userDetails){
+                const data = JSON.parse(userDetails)
+                const tarefaRef = collection(db,"tarefas")
+                const q = query(tarefaRef,orderBy("created_at","desc"),where("userUid","==",data?.uid))
+                
+                const unsub = onSnapshot(q, (snapshot) =>{
+                    let list = []
+                    snapshot.forEach((doc) => {
+                        list.push({
+                            id: doc.id,
+                            tarefa: doc.data().tarefa,
+                            userUid: doc.data().userUid,
+                        })
+                        
+                        
+                })
+                
+                console.log(list)
+                        
+                setTarefa(list) 
+                
+            })
+            
         }
+    }
         
         loadTarefa()
     },[])
@@ -33,7 +59,7 @@ export default function Admin(){
         await addDoc(collection(db,"tarefas"),{
             tarefa: tarefaInput,
             created_at: new Date(),
-            userUId: user?.uid
+            userUid: user?.uid
         }).then(() => {
             console.log("Tarefa registrada")
             setTarefaInput('')
