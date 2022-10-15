@@ -1,12 +1,44 @@
 
-import { useState } from 'react'
+import { useState,useEffect } from 'react'
 import { signOut } from 'firebase/auth'
 import './admin.css'
-import { auth } from '../../firebase.config'
+import { auth,db } from '../../firebase.config'
+import {addDoc,collection} from 'firebase/firestore'
+
 export default function Admin(){
-    const [tarefaInput,setTarefaInput] = useState('')
     
-    function handleRegister(){
+    const [tarefaInput,setTarefaInput] = useState('')
+    const [user, setUser] = useState({})
+    
+    useEffect(() => {
+        
+        async function loadTarefa(){
+            const userDetails = localStorage.getItem('@detailUser')
+            setUser(JSON.parse(userDetails))
+        }
+        
+        loadTarefa()
+    },[])
+    
+    async function handleRegister(e){
+        e.preventDefault()
+        console.log(tarefaInput)
+        
+        if(tarefaInput === ''){
+            alert("Preencha a tarefa.")
+            return
+        }
+        
+        
+        await addDoc(collection(db,"tarefas"),{
+            tarefa: tarefaInput,
+            created_at: new Date(),
+            userUId: user?.uid
+        }).then(() => {
+            console.log("Tarefa registrada")
+            setTarefaInput('')
+        })
+        .catch(err => console.log("DEu erro"))
         
     } 
     
@@ -17,7 +49,6 @@ export default function Admin(){
         })
     }
     
-    
     return(
         <div className='admin-container'>
         <h1>Minhas Tarefas</h1>
@@ -27,8 +58,7 @@ export default function Admin(){
                 value={tarefaInput} onChange={(e) => setTarefaInput(e.target.value)}
              />
             <button onClick={handleRegister}>Registrar Tarefa</button>
-            
-           
+    
                 <article className='list'>
                     
                     <p>Lorem ipsum dolor,  voluptas  </p>

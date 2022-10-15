@@ -4,8 +4,14 @@
     width:100%;
  }
 
+ 
+.admin-container  span{
+    margin: 16px 0;
+}
+
+
 .admin-container .form {
-    padding: 10px 10px
+    padding: 10px 0px
 }
 
 .admin-container .form button{
@@ -19,6 +25,12 @@
     flex-direction:row;
     justify-content: space-between;
     
+}
+
+
+.admin-container .form textarea{
+    padding:8px;
+    outline:none;
 }
 .admin-container .form .btn-delete{
     background-color: transparent;
@@ -41,8 +53,8 @@
     outline:none;
     border:none;
     width:48px;
-    position:absolute;
-    bottom:25%;
+    position:relative;
+    bottom:-100px;
     height:48px;
     transition:all 0.5s;
 }
