@@ -54,7 +54,7 @@
     border:none;
     width:48px;
     position:relative;
-    bottom:-100px;
+    bottom:-0px;
     height:48px;
     transition:all 0.5s;
 }
@@ -63,3 +63,25 @@
     background-color:#ff0000;
 
 }
+
+.admin-container .list{
+    display:flex;
+    justify-content:space-between;
+}
+
+.admin-container .btn-container button{
+    margin:5px;
+    
+ }
+
+ .admin-container .btn-container .btn-edit , .btn-delete{
+    border-radius:5px;
+    outline:none;
+    border:none;
+    width:60px;
+    margin:5px;
+    width:100px;
+    text-align:center;
+    padding:15px;
+ }
+ 

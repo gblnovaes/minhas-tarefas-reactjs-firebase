@@ -3,13 +3,14 @@ import { useState,useEffect } from 'react'
 import { signOut } from 'firebase/auth'
 import './admin.css'
 import { auth,db } from '../../firebase.config'
-import {addDoc,collection,onSnapshot,orderBy,where,query} from 'firebase/firestore'
+import {addDoc,collection,onSnapshot,orderBy,where,query,doc,deleteDoc, updateDoc} from 'firebase/firestore'
 
 export default function Admin(){
     
     const [tarefaInput,setTarefaInput] = useState('')
     const [user, setUser] = useState({})
     const [tarefa,setTarefa] = useState([])
+    const [edit,setEdit] = useState({})
     
     useEffect(() => {
         
@@ -33,9 +34,7 @@ export default function Admin(){
                         
                         
                 })
-                
-                console.log(list)
-                        
+                                        
                 setTarefa(list) 
                 
             })
@@ -48,13 +47,16 @@ export default function Admin(){
     
     async function handleRegister(e){
         e.preventDefault()
-        console.log(tarefaInput)
         
         if(tarefaInput === ''){
             alert("Preencha a tarefa.")
             return
         }
         
+        if(edit?.id){
+            handleUpdateTarefa()
+            return
+        }
         
         await addDoc(collection(db,"tarefas"),{
             tarefa: tarefaInput,
@@ -68,6 +70,33 @@ export default function Admin(){
         
     } 
     
+    async function handleUpdateTarefa(){
+           const docRef = doc(db,"tarefas",edit.id)
+           await updateDoc(docRef,{
+            tarefa: tarefaInput,
+           }).then(() =>{
+            console.log("Tarefa Atualizada")
+            setTarefaInput('')
+            setEdit({})
+           })
+           .catch(err => console.log(
+            "Deu erro",
+               err
+           ))
+           
+        }
+    
+    async function editTarefa(item){
+        console.log(item)
+        setTarefaInput(item.tarefa)
+        setEdit(item)
+    }
+    
+    async function deleteTarefa(id){
+        const docRef = doc(db,"tarefas",id)
+        await deleteDoc(docRef)
+    }
+    
     async function handleLogout(){
         await signOut(auth)
         .catch((error)=>{
@@ -79,23 +108,31 @@ export default function Admin(){
         <div className='admin-container'>
         <h1>Minhas Tarefas</h1>
         <span>Registre sua tarefa!</span>
-        <form className='form' >
+        <form className='form' onSubmit={handleRegister}>
              <textarea cols='10' rows='10' placeholder='Digite sua tarefa.'
                 value={tarefaInput} onChange={(e) => setTarefaInput(e.target.value)}
              />
-            <button onClick={handleRegister}>Registrar Tarefa</button>
-    
-                <article className='list'>
-                    
-                    <p>Lorem ipsum dolor,  voluptas  </p>
-                    <div>
-                        <button className='btn-edit'>Editar</button>
-                        <button className='btn-delete'>Concluir</button>
-                    </div>
-                    
-                </article>
-           
+             
+                {
+                    Object.keys(edit).length > 0 ? ( <button onClick={handleRegister} >Atualizar Tarefa</button>) : (<button onClick={handleRegister}>Registrar Tarefa</button>)
+                }
+             
+             
         </form>
+        
+            {
+                tarefa.map((item) => (
+                    <article className='list' key={item.id}>
+                    
+                        <p>{item.tarefa}</p>
+                        <div className='btn-container'>
+                            <button className='btn-edit' onClick={ () => editTarefa(item)}>Editar</button>
+                            <button className='btn-delete' onClick={ () => deleteTarefa(item.id) }>Concluir</button>
+                        </div>
+                        
+                    </article>
+                ))
+            }
         
         <button className='btn-logout' onClick={handleLogout}>Sair</button>
         
